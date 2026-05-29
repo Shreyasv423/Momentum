@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-dark-bg: #05050d;
-  --color-dark-card: #0c0c1e;
-  --color-dark-border: rgba(255, 255, 255, 0.08);
-  --color-neon-blue: #00d2ff;
-  --color-neon-purple: #9d4edd;
-  --color-neon-pink: #ff007f;
+  --color-dark-bg: #06060f;
+  --color-dark-card: #0d0d21;
+  --color-dark-border: rgba(255, 255, 255, 0.06);
+  --color-neon-blue: #00b0ff;
+  --color-neon-purple: #8b5cf6;
+  --color-neon-pink: #ec4899;
 }
 
 @layer base {
   body {
-    background-color: #05050d;
+    background-color: var(--color-dark-bg);
     color: #f3f4f6;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
@@ -19,42 +19,42 @@
 }
 
 .glass {
-  background: rgba(12, 12, 30, 0.65);
+  background: rgba(13, 13, 33, 0.65);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .glass-premium {
-  background: radial-gradient(120% 120% at 50% 10%, rgba(20, 20, 45, 0.7) 0%, rgba(8, 8, 24, 0.95) 100%);
+  background: radial-gradient(120% 120% at 50% 10%, rgba(20, 20, 48, 0.7) 0%, rgba(8, 8, 20, 0.96) 100%);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
 }
 
 .glass-accent-blue {
-  background: linear-gradient(135deg, rgba(0, 210, 255, 0.08) 0%, rgba(0, 100, 255, 0.03) 100%);
-  border: 1px solid rgba(0, 210, 255, 0.2);
+  background: linear-gradient(135deg, rgba(0, 176, 255, 0.08) 0%, rgba(0, 80, 255, 0.03) 100%);
+  border: 1px solid rgba(0, 176, 255, 0.2);
 }
 
 .glass-accent-purple {
-  background: linear-gradient(135deg, rgba(157, 78, 221, 0.08) 0%, rgba(120, 40, 200, 0.03) 100%);
-  border: 1px solid rgba(157, 78, 221, 0.2);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(100, 40, 200, 0.03) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #00d2ff 0%, #9d4edd 50%, #ff007f 100%);
+  background: linear-gradient(135deg, #00b0ff 0%, #8b5cf6 50%, #ec4899 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-glow-blue {
-  text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+  text-shadow: 0 0 10px rgba(0, 176, 255, 0.5);
 }
 
 .text-glow-purple {
-  text-shadow: 0 0 10px rgba(157, 78, 221, 0.5);
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
 }
 
 .no-scrollbar::-webkit-scrollbar {

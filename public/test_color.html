@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logo Color Analyzer</title>
+</head>
+<body style="background: #111; color: #fff; font-family: sans-serif; padding: 20px;">
+  <h1>Analyzing Logo...</h1>
+  <canvas id="canvas" style="display:none;"></canvas>
+  <div id="result">Please wait, loading image...</div>
+  <!-- Use absolute file path for local browser opening -->
+  <img id="logo" src="file:///home/shreyasv/Momentum/src/assets/momentumlogo.png" style="max-width: 300px; display: block; margin-top: 20px;" crossorigin="anonymous" />
+  
+  <script>
+    const img = document.getElementById('logo');
+    img.onload = function() {
+      try {
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.drawImage(img, 0, 0);
+        
+        // Sample pixels
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+        const colorCounts = {};
+        
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i+1];
+          const b = data[i+2];
+          const a = data[i+3];
+          
+          // Skip highly transparent, pure black, or pure white pixels
+          if (a < 50) continue;
+          if (r < 25 && g < 25 && b < 25) continue;
+          if (r > 230 && g > 230 && b > 230) continue;
+          
+          // Round colors slightly to group similar colors
+          const roundR = Math.round(r / 15) * 15;
+          const roundG = Math.round(g / 15) * 15;
+          const roundB = Math.round(b / 15) * 15;
+          const rgbKey = `${roundR},${roundG},${roundB}`;
+          
+          colorCounts[rgbKey] = (colorCounts[rgbKey] || 0) + 1;
+        }
+        
+        const sorted = Object.entries(colorCounts).sort((a,b) => b[1] - a[1]).slice(0, 8);
+        
+        let html = '<h2>Dominant Colors:</h2>';
+        sorted.forEach(([rgb, count]) => {
+          const [r, g, b] = rgb.split(',').map(Number);
+          const hex = '#' + [r,g,b].map(x => {
+            const hexStr = x.toString(16);
+            return hexStr.length === 1 ? '0' + hexStr : hexStr;
+          }).join('');
+          
+          html += `
+            <div style="display: flex; align-items: center; margin: 10px 0;">
+              <div style="width: 50px; height: 50px; background-color: ${hex}; border: 1px solid #fff; margin-right: 15px; border-radius: 8px;"></div>
+              <div>
+                <strong class="color-hex">${hex}</strong> (RGB: ${r}, ${g}, ${b})
+              </div>
+            </div>
+          `;
+        });
+        
+        document.getElementById('result').innerHTML = html;
+      } catch (err) {
+        document.getElementById('result').innerHTML = 'Error: ' + err.message;
+      }
+    };
+    img.onerror = function() {
+      document.getElementById('result').innerHTML = 'Failed to load image. Check the path.';
+    };
+  </script>
+</body>
+</html>

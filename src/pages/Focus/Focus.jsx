@@ -202,12 +202,12 @@ export default function Focus() {
               />
               <defs>
                 <linearGradient id="focusGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#00d2ff" />
-                  <stop offset="100%" stopColor="#9d4edd" />
+                  <stop offset="0%" stopColor="#00b0ff" />
+                  <stop offset="100%" stopColor="#8b5cf6" />
                 </linearGradient>
                 <linearGradient id="deepGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#9d4edd" />
-                  <stop offset="100%" stopColor="#ff007f" />
+                  <stop offset="0%" stopColor="#8b5cf6" />
+                  <stop offset="100%" stopColor="#ec4899" />
                 </linearGradient>
               </defs>
             </svg>

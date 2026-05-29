@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, CheckSquare, Timer, BarChart3, Settings, LogOut, Flame } from 'lucide-react';
 import { authService } from '../../services/auth';
 import { useStore } from '../../hooks/useStore';
+import momentumLogo from '../../assets/momentumlogo.png';
 
 export default function Navigation() {
   const navigate = useNavigate();
@@ -30,9 +31,7 @@ export default function Navigation() {
         <div>
           {/* Logo */}
           <div className="flex items-center gap-3 mb-10 px-2">
-            <div className="w-9 h-9 bg-gradient-to-tr from-neon-blue to-neon-purple rounded-xl flex items-center justify-center shadow-md shadow-neon-blue/20">
-              <span className="text-white font-extrabold text-lg">M</span>
-            </div>
+            <img src={momentumLogo} alt="Momentum Logo" className="w-9 h-9 object-contain" />
             <div>
               <h2 className="text-lg font-bold text-white tracking-wide">Momentum</h2>
               <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Productivity OS</span>

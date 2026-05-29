@@ -87,7 +87,7 @@ export default function Analytics() {
     { name: 'May', rating: 92 }
   ];
 
-  const COLORS = ['#00d2ff', '#9d4edd', '#ff007f', '#22c55e', '#eab308', '#3b82f6', '#6366f1'];
+  const COLORS = ['#00b0ff', '#8b5cf6', '#ec4899', '#22c55e', '#eab308', '#3b82f6', '#6366f1'];
 
   return (
     <div className="flex-1 pb-24 lg:pb-8 lg:pl-64 min-h-screen bg-dark-bg text-gray-100 select-none">
@@ -164,8 +164,8 @@ export default function Analytics() {
                 <AreaChart data={getWeeklyData()} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                   <defs>
                     <linearGradient id="areaBlue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#00d2ff" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="#00d2ff" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#00b0ff" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="#00b0ff" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
@@ -182,7 +182,7 @@ export default function Analytics() {
                     type="monotone"
                     dataKey="completed"
                     name="Completed Routines"
-                    stroke="#00d2ff"
+                    stroke="#00b0ff"
                     fillOpacity={1}
                     fill="url(#areaBlue)"
                     strokeWidth={2}
@@ -271,15 +271,15 @@ export default function Analytics() {
                       borderRadius: '16px'
                     }}
                   />
-                  <Bar dataKey="rating" name="Efficiency %" fill="#ff007f" radius={[8, 8, 0, 0]}>
+                  <Bar dataKey="rating" name="Efficiency %" fill="#ec4899" radius={[8, 8, 0, 0]}>
                     {monthlyData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill="url(#pinkGradient)" />
                     ))}
                   </Bar>
                   <defs>
                     <linearGradient id="pinkGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#ff007f" />
-                      <stop offset="100%" stopColor="#9d4edd" />
+                      <stop offset="0%" stopColor="#ec4899" />
+                      <stop offset="100%" stopColor="#8b5cf6" />
                     </linearGradient>
                   </defs>
                 </BarChart>

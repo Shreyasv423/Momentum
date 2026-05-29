@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, ArrowLeft, KeyRound, Activity } from 'lucide-react';
 import { authService } from '../../services/auth';
+import momentumLogo from '../../assets/momentumlogo.png';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -40,14 +41,14 @@ export default function ForgotPassword() {
         className="w-full max-w-md glass-premium p-8 rounded-3xl relative z-10"
       >
         {/* Brand Header */}
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-6">
           <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.4 }}
-            className="w-14 h-14 bg-gradient-to-tr from-neon-blue to-neon-purple rounded-2xl flex items-center justify-center shadow-lg shadow-neon-blue/20 mb-4"
+            initial={{ scale: 0.8, rotate: -5 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.5, type: 'spring' }}
+            className="w-20 h-20 flex items-center justify-center mb-3"
           >
-            <Activity className="w-8 h-8 text-white animate-pulse" />
+            <img src={momentumLogo} alt="Momentum Logo" className="w-full h-full object-contain" />
           </motion.div>
           <h1 className="text-3xl font-extrabold tracking-tight text-white mb-1">Reset Password</h1>
           <p className="text-sm text-gray-400 font-medium">We'll email you instructions to reset your password.</p>

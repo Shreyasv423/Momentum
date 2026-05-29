@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Plus } from 'lucide-react';
+import { X, Save, Plus, Clock } from 'lucide-react';
 
 const categories = ['DSA', 'Study', 'Gym', 'Work', 'Health', 'Personal', 'Revision'];
 const priorities = ['Low', 'Medium', 'High'];
@@ -144,12 +144,42 @@ export default function TaskModal({ isOpen, onClose, onSave, taskToEdit = null }
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Time</label>
-                  <input
-                    type="time"
-                    value={time}
-                    onChange={(e) => setTime(e.target.value)}
-                    className="w-full bg-dark-bg border border-dark-border focus:border-neon-blue/60 focus:ring-1 focus:ring-neon-blue/60 transition-all rounded-2xl py-3 px-4 outline-none text-sm text-white cursor-pointer"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="e.g. 09:00 AM or Evening"
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      className="w-full bg-dark-bg border border-dark-border focus:border-neon-blue/60 focus:ring-1 focus:ring-neon-blue/60 transition-all rounded-2xl py-3 pl-4 pr-10 outline-none text-sm text-white"
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center pointer-events-auto">
+                      <input
+                        type="time"
+                        onChange={(e) => setTime(e.target.value)}
+                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                        title="Choose using clock picker"
+                      />
+                      <Clock className="w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+                  
+                  {/* Quick-select chips */}
+                  <div className="flex flex-wrap gap-1.5 pt-1.5">
+                    {['09:00 AM', '01:00 PM', '06:00 PM', '09:00 PM'].map((quickTime) => (
+                      <button
+                        key={quickTime}
+                        type="button"
+                        onClick={() => setTime(quickTime)}
+                        className={`text-[9px] font-bold px-2.5 py-1 rounded-xl border transition-all ${
+                          time === quickTime
+                            ? 'bg-neon-blue/20 text-neon-blue border-neon-blue/30'
+                            : 'bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10'
+                        }`}
+                      >
+                        {quickTime}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="space-y-1">

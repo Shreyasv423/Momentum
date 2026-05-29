@@ -18,6 +18,7 @@ import ProgressRing from '../../components/dashboard/ProgressRing';
 import LeetCodeWidget from '../../components/dashboard/LeetCodeWidget';
 import TaskCard from '../../components/tasks/TaskCard';
 import TaskModal from '../../components/tasks/TaskModal';
+import momentumOne from '../../assets/momentum 1.png';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -79,6 +80,11 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="glass-premium rounded-3xl p-6 relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6"
         >
+          {/* Brand Background Graphic Overlay */}
+          <div className="absolute right-[5%] top-[-20%] bottom-[-20%] w-60 opacity-15 pointer-events-none hidden md:block select-none">
+            <img src={momentumOne} alt="Decorative brand element" className="w-full h-full object-contain" />
+          </div>
+
           <div className="space-y-2 text-center md:text-left z-10">
             <h2 className="text-xl sm:text-2xl font-extrabold text-white">
               Keep your momentum going 🔥

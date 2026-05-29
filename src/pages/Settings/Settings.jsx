@@ -36,6 +36,25 @@ export default function Settings() {
   const [leetcodeMessage, setLeetcodeMessage] = useState('');
   const [leetcodeError, setLeetcodeError] = useState('');
 
+  const [permissionState, setPermissionState] = useState(
+    typeof window !== 'undefined' && 'Notification' in window ? Notification.permission : 'default'
+  );
+
+  const handleRequestPermission = async () => {
+    if (!('Notification' in window)) {
+      alert('This browser does not support desktop notifications.');
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    setPermissionState(permission);
+    if (permission === 'granted') {
+      new Notification('Momentum Alerts Enabled! ⚡', {
+        body: 'You will now receive notifications for your milestones and timers.',
+        icon: '/favicon.svg'
+      });
+    }
+  };
+
   // Handle LeetCode link
   const handleSaveLeetCode = async (e) => {
     e.preventDefault();
@@ -150,6 +169,31 @@ export default function Settings() {
                 />
                 <div className="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-300 after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neon-purple" />
               </label>
+            </div>
+
+            <div className="flex items-center justify-between p-3.5 bg-dark-bg/60 border border-dark-border rounded-2xl">
+              <div className="space-y-0.5">
+                <p className="text-xs font-bold text-white">Desktop Alerts</p>
+                <p className="text-[10px] text-gray-500">Get native alerts for focus sessions, streaks, and achievements.</p>
+              </div>
+              <div>
+                {permissionState === 'granted' ? (
+                  <span className="text-xs text-neon-blue font-bold flex items-center gap-1 bg-neon-blue/10 border border-neon-blue/20 px-3 py-1.5 rounded-xl">
+                    <ShieldCheck className="w-3.5 h-3.5" /> Enabled
+                  </span>
+                ) : permissionState === 'denied' ? (
+                  <span className="text-xs text-red-400 font-bold flex items-center gap-1 bg-red-950/20 border border-red-500/20 px-3 py-1.5 rounded-xl" title="Enable notifications in browser settings">
+                    Blocked ⚠️
+                  </span>
+                ) : (
+                  <button
+                    onClick={handleRequestPermission}
+                    className="py-1.5 px-4 bg-gradient-to-r from-neon-blue to-neon-purple hover:from-neon-blue/90 hover:to-neon-purple/90 text-white text-xs font-bold rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md shadow-neon-blue/10"
+                  >
+                    Enable Alerts
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
