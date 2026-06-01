@@ -4,6 +4,7 @@ import { useStore } from './hooks/useStore';
 import { authService } from './services/auth';
 import ProtectedRoute from './components/ui/ProtectedRoute';
 import Navigation from './components/ui/Navigation';
+import ToastContainer from './components/ui/ToastContainer';
 
 // Auth Pages
 import Login from './pages/Auth/Login';
@@ -37,6 +38,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <ToastContainer />
       <Routes>
         {/* Authentication routes */}
         <Route path="/login" element={<Login />} />

@@ -48,6 +48,7 @@ export const useStore = create((set, get) => ({
   notifications: [],
   notificationsLoading: false,
   notificationPermission: 'default',
+  toasts: [],
 
   // === SETTINGS STATE ===
   settings: {
@@ -307,11 +308,14 @@ export const useStore = create((set, get) => ({
     const added = await dbService.addNotification(userId, notif);
     set((state) => ({ notifications: [added, ...state.notifications] }));
     
+    // Trigger premium in-app toast notification
+    get().addToast(notif.title, notif.body, notif.type || 'info');
+
     // Native Browser Notification Trigger if enabled and permission granted
     if (get().settings.soundEnabled && 'Notification' in window && Notification.permission === 'granted') {
       new Notification(notif.title, {
         body: notif.body,
-        icon: '/favicon.svg'
+        icon: '/momentumicon.png'
       });
     }
   },
@@ -332,6 +336,25 @@ export const useStore = create((set, get) => ({
 
   setNotificationPermission: (permission) => {
     set({ notificationPermission: permission });
+  },
+
+  addToast: (title, message, type = 'info') => {
+    const id = Math.random().toString(36).substring(2, 9);
+    set((state) => ({
+      toasts: [...(state.toasts || []), { id, title, message, type }]
+    }));
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+      set((state) => ({
+        toasts: (state.toasts || []).filter((t) => t.id !== id)
+      }));
+    }, 4000);
+  },
+
+  removeToast: (id) => {
+    set((state) => ({
+      toasts: (state.toasts || []).filter((t) => t.id !== id)
+    }));
   },
 
   // === SETTINGS OPERATIONS ===

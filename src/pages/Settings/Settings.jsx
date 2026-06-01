@@ -28,7 +28,8 @@ export default function Settings() {
     tasks,
     streak,
     focusSessions,
-    notifications
+    notifications,
+    addSystemNotification
   } = useStore();
 
   const [usernameInput, setUsernameInput] = useState(settings.leetcodeUsername || leetcodeStats.username || '');
@@ -42,15 +43,20 @@ export default function Settings() {
 
   const handleRequestPermission = async () => {
     if (!('Notification' in window)) {
-      alert('This browser does not support desktop notifications.');
+      addSystemNotification({
+        title: 'Momentum Alerts Enabled! ⚡',
+        body: 'You will now receive notifications for your milestones and timers.',
+        type: 'milestone'
+      });
       return;
     }
     const permission = await Notification.requestPermission();
     setPermissionState(permission);
     if (permission === 'granted') {
-      new Notification('Momentum Alerts Enabled! ⚡', {
+      addSystemNotification({
+        title: 'Momentum Alerts Enabled! ⚡',
         body: 'You will now receive notifications for your milestones and timers.',
-        icon: '/favicon.svg'
+        type: 'milestone'
       });
     }
   };
