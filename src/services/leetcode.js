@@ -28,14 +28,33 @@ export const leetCodeService = {
     }
 
     try {
-      // Fetch stats
-      const statsRes = await fetch(`https://alfa-leetcode-api.onrender.com/profiles/${username}`);
-      if (!statsRes.ok) {
+      // 1. Fetch main profile (for ranking)
+      const profileRes = await fetch(`https://alfa-leetcode-api.onrender.com/${username}`);
+      if (!profileRes.ok) {
         throw new Error('User not found or API issue');
       }
-      const statsData = await statsRes.json();
+      const profileData = await profileRes.json();
+      const ranking = profileData.ranking || 0;
+
+      // 2. Fetch solved stats
+      let solvedTotal = 0;
+      let solvedEasy = 0;
+      let solvedMedium = 0;
+      let solvedHard = 0;
+      try {
+        const solvedRes = await fetch(`https://alfa-leetcode-api.onrender.com/${username}/solved`);
+        if (solvedRes.ok) {
+          const solvedData = await solvedRes.json();
+          solvedTotal = solvedData.solvedProblem || 0;
+          solvedEasy = solvedData.easySolved || 0;
+          solvedMedium = solvedData.mediumSolved || 0;
+          solvedHard = solvedData.hardSolved || 0;
+        }
+      } catch (err) {
+        console.warn('Could not fetch solved stats:', err);
+      }
       
-      // Fetch contest
+      // 3. Fetch contest rating
       let contestRating = 0;
       try {
         const contestRes = await fetch(`https://alfa-leetcode-api.onrender.com/${username}/contest`);
@@ -47,11 +66,11 @@ export const leetCodeService = {
         console.warn('Could not fetch contest rating:', err);
       }
 
-      // Format submissions
+      // 4. Fetch submissions (limit 20)
       let recentSubmissions = [];
       let rawSubmissions = [];
       try {
-        const subRes = await fetch(`https://alfa-leetcode-api.onrender.com/users/${username}/submissions?limit=20`);
+        const subRes = await fetch(`https://alfa-leetcode-api.onrender.com/${username}/submission?limit=20`);
         if (subRes.ok) {
           const subData = await subRes.json();
           rawSubmissions = subData.submission || [];
@@ -120,13 +139,13 @@ export const leetCodeService = {
 
       return {
         username: username,
-        solvedTotal: statsData.totalSolved || 0,
-        solvedEasy: statsData.easySolved || 0,
-        solvedMedium: statsData.mediumSolved || 0,
-        solvedHard: statsData.hardSolved || 0,
+        solvedTotal: solvedTotal,
+        solvedEasy: solvedEasy,
+        solvedMedium: solvedMedium,
+        solvedHard: solvedHard,
         contestRating: contestRating || 1500,
         dsaStreak: dsaStreak,
-        ranking: statsData.ranking || 0,
+        ranking: ranking,
         recentSubmissions: recentSubmissions.length ? recentSubmissions : [
           { title: 'Reverse Integer', status: 'Accepted', lang: 'javascript', time: '3 days ago' },
           { title: 'Palindromic Substrings', status: 'Accepted', lang: 'python', time: '4 days ago' }
