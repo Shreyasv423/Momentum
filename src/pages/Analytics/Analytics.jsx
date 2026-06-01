@@ -40,8 +40,14 @@ export default function Analytics() {
       const dayName = days[d.getDay()];
       const dateStr = d.toISOString().split('T')[0];
       
-      // Count completed tasks on this date (history) or mock if guest has no history
-      const completedOnDay = streak.history && streak.history[dateStr] ? 3 : (i === 0 ? completedTasks : Math.floor(Math.random() * 4) + 1);
+      // Determine real completions: if in history or today's completed tasks
+      let completedOnDay = 0;
+      if (i === 0) {
+        completedOnDay = completedTasks;
+      } else if (streak.history && streak.history[dateStr]) {
+        // Fallback to active tasks count or 3 if history exists but count is unrecorded
+        completedOnDay = completedTasks > 0 ? completedTasks : 3;
+      }
       
       data.push({
         name: dayName,
@@ -51,41 +57,74 @@ export default function Analytics() {
     return data;
   };
 
-  // 3. Category Breakdown Data
+  // 3. Category Breakdown Data (Routine Breakdown)
   const getCategoryData = () => {
     const counts = {};
     tasks.forEach((t) => {
       if (t.completed) {
-        counts[t.category] = (counts[t.category] || 0) + 1;
+        counts[t.category || 'General'] = (counts[t.category || 'General'] || 0) + 1;
       }
     });
 
-    // Provide default mockup data if no categories completed
-    const data = Object.keys(counts).map((cat) => ({
+    let data = Object.keys(counts).map((cat) => ({
       name: cat,
       value: counts[cat]
     }));
 
+    // If no tasks completed yet, show breakdown of all tasks in the list
+    if (data.length === 0 && tasks.length > 0) {
+      const allCounts = {};
+      tasks.forEach((t) => {
+        allCounts[t.category || 'General'] = (allCounts[t.category || 'General'] || 0) + 1;
+      });
+      data = Object.keys(allCounts).map((cat) => ({
+        name: cat,
+        value: allCounts[cat]
+      }));
+    }
+
+    // If still empty (no tasks created at all), show a clean empty state indicator
     if (data.length === 0) {
       return [
-        { name: 'DSA', value: 8 },
-        { name: 'Gym', value: 5 },
-        { name: 'Work', value: 7 },
-        { name: 'Study', value: 4 },
-        { name: 'Personal', value: 3 }
+        { name: 'No Routines Created', value: 1 }
       ];
     }
     return data;
   };
 
-  // 4. Monthly Productivity data (Mock trends for premium dashboard)
-  const monthlyData = [
-    { name: 'Jan', rating: 65 },
-    { name: 'Feb', rating: 72 },
-    { name: 'Mar', rating: 78 },
-    { name: 'Apr', rating: 85 },
-    { name: 'May', rating: 92 }
-  ];
+  // 4. Monthly Productivity data (calculated from focus logs)
+  const getMonthlyData = () => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const data = [];
+    const today = new Date();
+
+    // Generate trend for the last 5 months
+    for (let i = 4; i >= 0; i--) {
+      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      const monthName = months[d.getMonth()];
+      const year = d.getFullYear();
+      const monthNum = d.getMonth();
+
+      // Sum focus minutes for this month
+      const sessionsInMonth = focusSessions.filter(s => {
+        if (!s.completedAt) return false;
+        const sDate = new Date(s.completedAt);
+        return sDate.getFullYear() === year && sDate.getMonth() === monthNum;
+      });
+      const focusMinutes = sessionsInMonth.reduce((acc, curr) => acc + (curr.durationMinutes || 0), 0);
+
+      // Productivity Rating: 50% baseline + (focus minutes / 6) capped at 100%
+      const rating = Math.min(100, 50 + Math.round(focusMinutes / 6));
+
+      data.push({
+        name: monthName,
+        rating: rating
+      });
+    }
+    return data;
+  };
+
+  const monthlyData = getMonthlyData();
 
   const COLORS = ['#00b0ff', '#8b5cf6', '#ec4899', '#22c55e', '#eab308', '#3b82f6', '#6366f1'];
 

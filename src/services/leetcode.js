@@ -49,11 +49,13 @@ export const leetCodeService = {
 
       // Format submissions
       let recentSubmissions = [];
+      let rawSubmissions = [];
       try {
-        const subRes = await fetch(`https://alfa-leetcode-api.onrender.com/users/${username}/submissions?limit=5`);
+        const subRes = await fetch(`https://alfa-leetcode-api.onrender.com/users/${username}/submissions?limit=20`);
         if (subRes.ok) {
           const subData = await subRes.json();
-          recentSubmissions = (subData.submission || []).map(sub => ({
+          rawSubmissions = subData.submission || [];
+          recentSubmissions = rawSubmissions.slice(0, 5).map(sub => ({
             title: sub.title,
             status: sub.statusDisplay,
             lang: sub.lang,
@@ -64,8 +66,57 @@ export const leetCodeService = {
         console.warn('Could not fetch submissions:', err);
       }
 
-      // Calculate a dummy DSA streak based on solved count / updates
-      const dsaStreak = Math.floor(Math.random() * 8) + 3; // Mocking streak since API doesn't expose it directly
+      // Calculate real DSA consistency streak
+      const calculateStreak = (submissions) => {
+        if (!submissions || submissions.length === 0) return 0;
+        
+        const activeDays = new Set();
+        submissions.forEach(sub => {
+          if (sub.statusDisplay === 'Accepted' && sub.timestamp) {
+            const date = new Date(parseInt(sub.timestamp) * 1000);
+            const dateStr = date.toLocaleDateString();
+            activeDays.add(dateStr);
+          }
+        });
+
+        const sortedDays = Array.from(activeDays).map(d => new Date(d)).sort((a, b) => b - a);
+        if (sortedDays.length === 0) return 0;
+
+        let streak = 0;
+        let today = new Date();
+        today.setHours(0,0,0,0);
+        
+        let yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const latestActive = sortedDays[0];
+        latestActive.setHours(0,0,0,0);
+
+        if (latestActive.getTime() !== today.getTime() && latestActive.getTime() !== yesterday.getTime()) {
+          return 0;
+        }
+
+        let checkDate = new Date(latestActive);
+        let sortedIdx = 0;
+
+        while (sortedIdx < sortedDays.length) {
+          const activeDay = sortedDays[sortedIdx];
+          activeDay.setHours(0,0,0,0);
+
+          if (activeDay.getTime() === checkDate.getTime()) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+            sortedIdx++;
+          } else if (activeDay.getTime() < checkDate.getTime()) {
+            break;
+          } else {
+            sortedIdx++;
+          }
+        }
+        return streak;
+      };
+
+      const dsaStreak = calculateStreak(rawSubmissions);
 
       return {
         username: username,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bell, Flame, X, Check, Trash2, ShieldAlert } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { createPortal } from 'react-dom';
 import { useStore } from '../../hooks/useStore';
 
 export default function Header({ title }) {
@@ -69,15 +70,15 @@ export default function Header({ title }) {
 
       {/* Notifications Drawer */}
       <AnimatePresence>
-        {showNotifications && (
+        {showNotifications && typeof document !== 'undefined' && createPortal(
           <>
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
+              animate={{ opacity: 0.6 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowNotifications(false)}
-              className="fixed inset-0 bg-black z-40"
+              className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50"
             />
 
             {/* Panel */}
@@ -86,7 +87,7 @@ export default function Header({ title }) {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 h-full w-full max-w-sm bg-dark-card border-l border-dark-border shadow-2xl z-50 p-6 flex flex-col justify-between"
+              className="fixed right-0 top-0 h-full w-full max-w-sm bg-[#0d0d21] border-l border-white/10 shadow-2xl z-55 p-6 flex flex-col justify-between"
             >
               <div>
                 {/* Header */}
@@ -156,9 +157,11 @@ export default function Header({ title }) {
                 </button>
               )}
             </motion.div>
-          </>
+          </>,
+          document.body
         )}
       </AnimatePresence>
+
     </header>
   );
 }
